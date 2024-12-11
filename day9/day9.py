@@ -8,7 +8,7 @@ def main():
     print("Part 2: ", part2Answer)
     
 def load():
-    with open('day9/exampleInput.txt', 'r') as f:
+    with open('day9/input.txt', 'r') as f:
         lines = f.readlines()
         return lines[0].strip()
 
@@ -47,23 +47,18 @@ def compressMemoryPart1(memory):
 def part2(line):
     memory = fillMemory(line)
     
-    outputMemory(memory)
-    
     memory = compressMemoryPart2(memory)
-    
-    outputMemory(memory)
 
     checksum = checksumMemory(memory)
     
     return checksum
 
-def compressMemoryPart2(memory):
+def compressMemoryPart2(memory: list):
     idx = len(memory) - 1
     
     while (idx > 0):
         if memory[idx][0] == 0:
-            memory.pop(0)
-            continue
+            memory.pop(idx)
         elif memory[idx][1] == -1:
             pass
         else:
@@ -76,6 +71,7 @@ def compressMemoryPart2(memory):
                     idx += 1
                     
                     memory[searchIdx][0] = memory[idx][0]
+                    memory[searchIdx][1] = memory[idx][1]
                     memory[idx][1] = -1
 
                     break
@@ -109,9 +105,11 @@ def checksumMemory(memory):
     idx = 0
     
     for item in memory:
+        
         i = 0
         while i < item[0]:
-            score += item[1] * idx
+            if item[1] != -1:
+                score += item[1] * idx
             i += 1
             idx += 1
             
